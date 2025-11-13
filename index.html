@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tic Tac Toe - 2 Player XO</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      height: 100vh;
+      background: linear-gradient(135deg, #4f46e5, #9333ea, #ec4899);
+      background-size: 300% 300%;
+      animation: gradientMove 10s infinite alternate;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      overflow: hidden;
+    }
+
+    @keyframes gradientMove {
+      0% { background-position: left; }
+      100% { background-position: right; }
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 40px;
+      max-width: 400px;
+      text-align: center;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+      animation: float 4s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+
+    h1 {
+      font-size: 2.2em;
+      margin-bottom: 15px;
+    }
+
+    .xo {
+      font-size: 2.5em;
+      letter-spacing: 5px;
+      margin-bottom: 15px;
+    }
+
+    p {
+      font-size: 1em;
+      opacity: 0.9;
+      margin-bottom: 25px;
+    }
+
+    .btn {
+      display: inline-block;
+      background: white;
+      color: #4f46e5;
+      font-weight: 600;
+      text-decoration: none;
+      padding: 12px 28px;
+      border-radius: 30px;
+      transition: 0.3s ease;
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+    }
+
+    .btn:hover {
+      transform: scale(1.05);
+      background: #4f46e5;
+      color: white;
+      box-shadow: 0 0 25px rgba(255, 255, 255, 0.5);
+    }
+
+    .footer {
+      position: absolute;
+      bottom: 15px;
+      font-size: 0.8em;
+      opacity: 0.8;
+    }
+
+    .xo-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 60px);
+      gap: 10px;
+      justify-content: center;
+      margin: 25px 0;
+    }
+
+    .xo-box {
+      width: 60px;
+      height: 60px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5em;
+      font-weight: bold;
+      color: white;
+      animation: pulse 2s infinite ease-in-out;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.8; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.1); }
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Tic Tac Toe</h1>
+    <div class="xo">❌ ⭕ ❌ ⭕</div>
+    <p>Play the ultimate 2 Player XO challenge!<br>Test your brain or challenge your friends.</p>
+    
+    <div class="xo-grid">
+      <div class="xo-box">X</div>
+      <div class="xo-box">O</div>
+      <div class="xo-box">X</div>
+      <div class="xo-box">O</div>
+      <div class="xo-box">X</div>
+      <div class="xo-box">O</div>
+      <div class="xo-box">X</div>
+      <div class="xo-box">O</div>
+      <div class="xo-box">X</div>
+    </div>
+
+    <a href="https://play.google.com/store/apps/details?id=com.appsmithy.xo.xo" class="btn">
+      🎮 Play on Google Play
+    </a>
+  </div>
+
+  <div class="footer">© 2025 Appsmithy</div>
+</body>
+</html>
