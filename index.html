@@ -1,146 +1,530 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tic Tac Toe - 2 Player XO</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Tic Tac Toe — 2 Player XO • Play | Appsmithy</title>
+  <meta name="description" content="Tic Tac Toe - 2 Player XO. Play classic Tic Tac Toe with friends or solo. Smooth animations, clean UI, and local multiplayer." />
+  <meta name="theme-color" content="#082032" />
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+    :root{
+      --bg-1: #0f1724;    /* deep */
+      --bg-2: #081126;    /* deeper */
+      --accent-a: #7c3aed; /* purple */
+      --accent-b: #06b6d4; /* cyan */
+      --glass: rgba(255,255,255,0.06);
+      --glass-2: rgba(255,255,255,0.04);
+      --card-w: 980px;
+      --max-width: 1080px;
+      --radius: 16px;
+      --ease: cubic-bezier(.2,.9,.3,1);
     }
 
-    body {
-      font-family: 'Poppins', sans-serif;
-      height: 100vh;
-      background: linear-gradient(135deg, #4f46e5, #9333ea, #ec4899);
-      background-size: 300% 300%;
-      animation: gradientMove 10s infinite alternate;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color: white;
-      overflow: hidden;
+    /* Reset & base */
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:"Inter",system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;
+      background: radial-gradient(1200px 600px at 10% 20%, rgba(124,58,237,0.12), transparent),
+                  radial-gradient(900px 500px at 85% 80%, rgba(6,182,212,0.08), transparent),
+                  linear-gradient(180deg,var(--bg-1),var(--bg-2));
+      color: #e6eef8;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      overflow-x:hidden;
     }
 
-    @keyframes gradientMove {
-      0% { background-position: left; }
-      100% { background-position: right; }
+    .wrap{
+      max-width:var(--max-width);
+      margin:0 auto;
+      padding:28px;
     }
 
-    .card {
-      background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(10px);
-      border-radius: 20px;
-      padding: 40px;
-      max-width: 400px;
-      text-align: center;
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
-      animation: float 4s ease-in-out infinite;
+    header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:18px;
+      padding:6px 0 18px 0;
+    }
+    .brand{
+      display:flex;
+      gap:12px;
+      align-items:center;
+      text-decoration:none;
+      color:inherit;
+    }
+    .logo {
+      width:56px;
+      height:56px;
+      border-radius:12px;
+      display:grid;
+      place-items:center;
+      background: linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+      box-shadow: 0 6px 20px rgba(0,0,0,0.5), inset 0 -6px 18px rgba(255,255,255,0.02);
+      transform:translateZ(0);
+    }
+    .logo svg{width:42px;height:42px;filter:drop-shadow(0 6px 18px rgba(0,0,0,0.5))}
+    .brand h1{font-size:1.05rem;margin:0;line-height:1}
+    .brand p{font-size:0.78rem;margin:0;opacity:0.8}
+
+    /* Main hero */
+    .hero{
+      display:grid;
+      grid-template-columns: 1fr 420px;
+      gap:28px;
+      align-items:center;
+      margin-top:6vh;
+      margin-bottom:48px;
     }
 
-    @keyframes float {
-      0%, 100% { transform: translateY(0px); }
-      50% { transform: translateY(-10px); }
+    /* Left column: content */
+    .hero-card{
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border-radius:var(--radius);
+      padding:28px;
+      box-shadow: 0 20px 50px rgba(2,6,23,0.6);
+      border:1px solid rgba(255,255,255,0.03);
+      position:relative;
+      overflow:hidden;
+      min-height:320px;
     }
 
-    h1 {
-      font-size: 2.2em;
-      margin-bottom: 15px;
+    .kicker{
+      display:inline-flex;
+      gap:8px;
+      align-items:center;
+      font-weight:600;
+      font-size:0.82rem;
+      background: linear-gradient(90deg,var(--accent-a),var(--accent-b));
+      padding:6px 10px;border-radius:999px;
+      box-shadow: 0 8px 26px rgba(124,58,237,0.12);
+      color:white;
     }
 
-    .xo {
-      font-size: 2.5em;
-      letter-spacing: 5px;
-      margin-bottom: 15px;
+    h2{
+      margin:18px 0 8px 0;
+      font-size:2.1rem;
+      line-height:1.02;
+      letter-spacing:-0.02em;
+    }
+    p.lead{margin:0 0 18px 0;opacity:0.9;font-size:1.03rem}
+
+    .actions{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      align-items:center;
     }
 
-    p {
-      font-size: 1em;
-      opacity: 0.9;
-      margin-bottom: 25px;
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      text-decoration:none;
+      padding:12px 18px;
+      border-radius:12px;
+      font-weight:600;
+      transition:transform .22s var(--ease), box-shadow .22s var(--ease);
+      box-shadow: 0 8px 30px rgba(2,6,23,0.6);
+    }
+    .btn-primary{
+      background: linear-gradient(90deg,var(--accent-a),var(--accent-b));
+      color:white;
+      border:0;
+      transform:translateZ(0);
+    }
+    .btn-primary:active{transform:translateY(2px) scale(.998)}
+    .btn-ghost{
+      background:transparent;
+      color:inherit;
+      border:1px solid rgba(255,255,255,0.08);
+      backdrop-filter: blur(4px);
     }
 
-    .btn {
-      display: inline-block;
-      background: white;
-      color: #4f46e5;
-      font-weight: 600;
-      text-decoration: none;
-      padding: 12px 28px;
-      border-radius: 30px;
-      transition: 0.3s ease;
-      box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+    .meta{
+      margin-top:14px;
+      display:flex;
+      gap:14px;
+      flex-wrap:wrap;
+      align-items:center;
+      color:rgba(230,238,248,0.85);
+      font-size:0.92rem;
     }
 
-    .btn:hover {
-      transform: scale(1.05);
-      background: #4f46e5;
-      color: white;
-      box-shadow: 0 0 25px rgba(255, 255, 255, 0.5);
+    /* Right column: preview card */
+    .preview{
+      perspective:1200px;
     }
 
-    .footer {
-      position: absolute;
-      bottom: 15px;
-      font-size: 0.8em;
-      opacity: 0.8;
+    .game-card{
+      width:100%;
+      max-width:420px;
+      aspect-ratio: 9/16;
+      border-radius:20px;
+      overflow:hidden;
+      position:relative;
+      transform-style:preserve-3d;
+      transition:transform .6s var(--ease);
+      box-shadow: 0 30px 80px rgba(2,6,23,0.65);
+      border:1px solid rgba(255,255,255,0.04);
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
     }
 
-    .xo-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 60px);
-      gap: 10px;
-      justify-content: center;
-      margin: 25px 0;
+    .game-top{
+      position:absolute;
+      inset:0;
+      padding:20px;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      z-index:2;
     }
 
-    .xo-box {
-      width: 60px;
-      height: 60px;
-      border-radius: 10px;
-      background: rgba(255,255,255,0.15);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.5em;
-      font-weight: bold;
-      color: white;
-      animation: pulse 2s infinite ease-in-out;
+    .score{
+      display:flex;
+      gap:12px;
+      align-items:center;
+      justify-content:space-between;
+      font-weight:700;
+    }
+    .score .pill{
+      padding:8px 12px;
+      border-radius:999px;
+      background:var(--glass);
+      font-weight:700;
+      backdrop-filter: blur(6px);
+      font-size:0.9rem;
+      color:white;
     }
 
-    @keyframes pulse {
-      0%, 100% { opacity: 0.8; transform: scale(1); }
-      50% { opacity: 1; transform: scale(1.1); }
+    /* animated board */
+    .board{
+      margin-top:12px;
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:8px;
+      flex:1;
+      align-content:center;
+      justify-items:center;
+      padding:12px;
     }
+    .cell{
+      width:64px;height:64px;border-radius:10px;
+      display:grid;place-items:center;
+      background: rgba(255,255,255,0.02);
+      font-size:1.3rem;font-weight:800;color:rgba(255,255,255,0.85);
+      transform:translateZ(0);
+      transition: transform .25s var(--ease), background .25s var(--ease);
+      box-shadow: inset 0 -6px 12px rgba(255,255,255,0.02);
+    }
+    .cell:hover{transform:translateY(-6px) rotate(-1deg); background:rgba(255,255,255,0.035)}
+    .cell.x { color: #ff6b6b; text-shadow:0 6px 18px rgba(255,107,107,0.12)}
+    .cell.o { color: #6ee7b7; text-shadow:0 6px 18px rgba(110,231,183,0.09)}
+
+    /* floating particle canvas holder */
+    .particle-canvas{
+      position:absolute; inset:0; z-index:1; pointer-events:none;
+    }
+
+    /* features grid */
+    .features{
+      margin-top:26px;
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:12px;
+    }
+    .feat{
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);
+      display:flex;gap:12px;align-items:center;
+    }
+    .feat svg{width:36px;height:36px;flex-shrink:0}
+
+    /* footer small */
+    footer{
+      margin-top:48px;
+      padding:18px 0;
+      color:rgba(230,238,248,0.65);
+      font-size:0.88rem;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+
+    /* small screen adjustments */
+    @media (max-width:900px){
+      .hero{grid-template-columns:1fr; gap:16px}
+      .game-card{max-width:360px; margin:0 auto}
+      .features{grid-template-columns:repeat(2,1fr)}
+    }
+    @media (max-width:520px){
+      header{padding:0 4px}
+      h2{font-size:1.6rem}
+      .features{grid-template-columns:1fr}
+      .cell{width:52px;height:52px;font-size:1.05rem}
+      .hero-card{padding:18px}
+    }
+
+    /* little interactive tilt effect (mouse) */
+    .preview:hover .game-card{ transform: rotateX(6deg) rotateY(-6deg) translateY(-8px) }
+    .game-card:active{ transform: translateY(2px) }
   </style>
 </head>
 <body>
-  <div class="card">
-    <h1>Tic Tac Toe</h1>
-    <div class="xo">❌ ⭕ ❌ ⭕</div>
-    <p>Play the ultimate 2 Player XO challenge!<br>Test your brain or challenge your friends.</p>
-    
-    <div class="xo-grid">
-      <div class="xo-box">X</div>
-      <div class="xo-box">O</div>
-      <div class="xo-box">X</div>
-      <div class="xo-box">O</div>
-      <div class="xo-box">X</div>
-      <div class="xo-box">O</div>
-      <div class="xo-box">X</div>
-      <div class="xo-box">O</div>
-      <div class="xo-box">X</div>
-    </div>
+  <div class="wrap" role="main">
+    <header>
+      <a class="brand" href="#" aria-label="Tic Tac Toe homepage">
+        <span class="logo" aria-hidden="true">
+          <!-- compact SVG logo: stylized X + O -->
+          <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <defs>
+              <linearGradient id="g1" x1="0" x2="1">
+                <stop offset="0" stop-color="#7c3aed"/>
+                <stop offset="1" stop-color="#06b6d4"/>
+              </linearGradient>
+            </defs>
+            <rect width="100" height="100" rx="20" fill="url(#g1)"/>
+            <g transform="translate(10,10) scale(.8)" fill="white">
+              <path d="M8 8 L42 42 M42 8 L8 42" stroke="white" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="68" cy="25" r="12" stroke="white" stroke-width="6" fill="none"/>
+            </g>
+          </svg>
+        </span>
+        <div>
+          <h1>Tic Tac Toe</h1>
+          <p>2 Player XO • Appsmithy</p>
+        </div>
+      </a>
 
-    <a href="https://play.google.com/store/apps/details?id=com.appsmithy.xo.xo" class="btn">
-      🎮 Play on Google Play
-    </a>
+      <nav aria-label="Primary">
+        <a class="btn btn-ghost" href="#features">Features</a>
+        <a class="btn btn-ghost" href="#download">Contact</a>
+      </nav>
+    </header>
+
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-card" aria-hidden="false">
+        <span class="kicker" aria-hidden="true">New • Smooth Animations</span>
+        <h2 id="hero-title">Play Tic Tac Toe — fast, sleek, and fun.</h2>
+        <p class="lead">Classic tic-tac-toe with delightful micro-interactions. Local 2-player mode, responsive UI, and minimal ads to keep gameplay smooth.</p>
+
+        <div class="actions" aria-hidden="true">
+          <!-- Replace package id below -->
+          <a id="playstore-btn" class="btn btn-primary" href="https://play.google.com/store/apps/details?id=com.appsmithy.xo.xo" target="_blank" rel="noopener" aria-label="Play Store — Tic Tac Toe">
+            <!-- Inline Play badge SVG (lazy) -->
+            <svg width="18" height="18" viewBox="0 0 512 512" fill="none" aria-hidden="true">
+              <path d="M325 256L96 48v416L325 256z" fill="#fff" opacity="0.15"/>
+              <path d="M325 256L96 48v416L325 256z" fill="white" opacity="0.07"/>
+              <path d="M325 256L96 48v416L325 256z" fill="url(#gplay)"/>
+            </svg>
+            Play on Google Play
+          </a>
+
+          <a class="btn btn-ghost" href="#features">See features</a>
+        </div>
+
+        <div class="meta" aria-hidden="true">
+          <div class="pill" style="padding:6px 10px;border-radius:999px;background:var(--glass);font-weight:700;">Lightweight • <span style="opacity:.85"><strong>~3MB</strong></span></div>
+          <div style="opacity:.85">Local 2-player • No signup</div>
+        </div>
+
+        <!-- features preview -->
+        <div class="features" id="features" aria-hidden="false">
+          <div class="feat" role="article">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="1.5" y="1.5" width="21" height="21" rx="5" stroke="white" stroke-opacity="0.12" /></svg>
+            <div>
+              <div style="font-weight:700">Local 2-player</div>
+              <div style="opacity:.85">Play with a friend on the same device.</div>
+            </div>
+          </div>
+
+          <div class="feat" role="article">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="10" stroke="white" stroke-opacity="0.12"/></svg>
+            <div>
+              <div style="font-weight:700">Animated UI</div>
+              <div style="opacity:.85">Responsive micro-interactions and polish.</div>
+            </div>
+          </div>
+
+          <div class="feat" role="article">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 12h16" stroke="white" stroke-opacity="0.12"/></svg>
+            <div>
+              <div style="font-weight:700">Minimal ads</div>
+              <div style="opacity:.85">Play-focused, low interruption design.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Preview with animated board + particles -->
+      <div class="preview" aria-hidden="true">
+        <div class="game-card" role="img" aria-label="Animated preview of Tic Tac Toe">
+          <canvas class="particle-canvas" id="particleCanvas" aria-hidden="true"></canvas>
+
+          <div class="game-top">
+            <div class="score" aria-hidden="true">
+              <div class="pill">You <span style="opacity:.75">0</span></div>
+              <div style="opacity:.8;font-weight:700">Round 1</div>
+              <div class="pill">Friend <span style="opacity:.75">0</span></div>
+            </div>
+
+            <div class="board" id="demoBoard" aria-hidden="true">
+              <div class="cell x">X</div>
+              <div class="cell o">O</div>
+              <div class="cell x">X</div>
+              <div class="cell o">O</div>
+              <div class="cell x">X</div>
+              <div class="cell o">O</div>
+              <div class="cell x">X</div>
+              <div class="cell o">O</div>
+              <div class="cell x">X</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div>© <time id="year"></time> Appsmithy — Tic Tac Toe</div>
+      <div style="opacity:.9">Made for small fun sessions • <a href="privacy.html" style="color:inherit;text-decoration:underline">Privacy</a></div>
+    </footer>
   </div>
 
-  <div class="footer">© 2025 Appsmithy</div>
+  <script>
+    // small DOM utilities
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Lightweight particle canvas with X/O shapes
+    (function(){
+      const canvas = document.getElementById('particleCanvas');
+      const card = canvas.parentElement;
+      const ctx = canvas.getContext('2d');
+      let w = canvas.width = card.clientWidth;
+      let h = canvas.height = card.clientHeight;
+      const DPR = window.devicePixelRatio || 1;
+      canvas.width = w * DPR; canvas.height = h * DPR;
+      canvas.style.width = w + 'px'; canvas.style.height = h + 'px';
+      ctx.scale(DPR, DPR);
+
+      let particles = [];
+      const max = 18;
+      const colors = ['#ff6b6b','#6ee7b7','#ffd166','#9b5de5'];
+
+      function rand(min,max){ return Math.random()*(max-min)+min; }
+
+      function create(){
+        if(particles.length >= max) return;
+        const size = rand(12,28);
+        particles.push({
+          x: rand(20, w-20),
+          y: rand(20, h-20),
+          vx: rand(-0.2,0.2),
+          vy: rand(-0.6,-0.2),
+          size,
+          type: Math.random()>0.5 ? 'X' : 'O',
+          rot: rand(0,Math.PI*2),
+          color: colors[Math.floor(rand(0,colors.length))]
+        });
+      }
+
+      function drawX(x,y,s,rot,color){
+        ctx.save();
+        ctx.translate(x,y);
+        ctx.rotate(rot);
+        ctx.lineWidth = Math.max(2, s*0.12);
+        ctx.lineCap = 'round';
+        ctx.strokeStyle = color;
+        ctx.beginPath();
+        ctx.moveTo(-s/2,-s/2); ctx.lineTo(s/2,s/2);
+        ctx.moveTo(-s/2,s/2); ctx.lineTo(s/2,-s/2);
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      function drawO(x,y,s,color){
+        ctx.save();
+        ctx.translate(x,y);
+        ctx.lineWidth = Math.max(2,s*0.12);
+        ctx.strokeStyle = color;
+        ctx.beginPath();
+        ctx.arc(0,0,s/2,0,Math.PI*2);
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      function tick(){
+        ctx.clearRect(0,0,w,h);
+        // spawn slowly
+        if(Math.random() < 0.17) create();
+
+        for(let i=particles.length-1;i>=0;i--){
+          const p = particles[i];
+          p.x += p.vx;
+          p.y += p.vy;
+          p.vy -= 0.002; // slight upward drift
+          p.rot += 0.01;
+
+          // fade out and remove
+          if(p.y + p.size < -20 || p.x < -40 || p.x > w+40) {
+            particles.splice(i,1); continue;
+          }
+
+          ctx.globalAlpha = 0.9;
+          if(p.type === 'X') drawX(p.x,p.y,p.size,p.rot,p.color);
+          else drawO(p.x,p.y,p.size,p.color);
+          ctx.globalAlpha = 1;
+        }
+        requestAnimationFrame(tick);
+      }
+
+      // handle resize
+      function resize(){
+        w = canvas.width = card.clientWidth;
+        h = canvas.height = card.clientHeight;
+        canvas.width = w * DPR; canvas.height = h * DPR;
+        canvas.style.width = w + 'px'; canvas.style.height = h + 'px';
+        ctx.setTransform(1,0,0,1,0,0);
+        ctx.scale(DPR, DPR);
+        particles = [];
+      }
+      window.addEventListener('resize', debounce(resize,200));
+      tick();
+
+      // small debounce helper
+      function debounce(fn,wait){ let t; return function(){ clearTimeout(t); t=setTimeout(fn,wait); } }
+    })();
+
+    // Micro interaction: animate board cells on load
+    (function animateCells(){
+      const cells = document.querySelectorAll('#demoBoard .cell');
+      cells.forEach((c,i) => {
+        c.style.transform = 'translateY(18px) scale(.94)';
+        c.style.opacity = '0';
+        setTimeout(()=> {
+          c.style.transition = 'transform .6s cubic-bezier(.2,.9,.3,1), opacity .6s';
+          c.style.transform = 'translateY(0) scale(1)';
+          c.style.opacity = '1';
+        }, 120 + i*60);
+      });
+    })();
+
+    // Accessibility: keyboard focus visible hack
+    (function(){
+      document.body.addEventListener('keydown', function(e){
+        if(e.key === 'Tab') document.documentElement.classList.add('show-focus-outline');
+      });
+    })();
+
+    // NOTE: If you want to change the Play Store link use the element id 'playstore-btn'
+    // Replace the href with your app's package id if different.
+  </script>
 </body>
 </html>
